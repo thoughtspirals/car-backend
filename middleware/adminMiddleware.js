@@ -7,10 +7,6 @@ const adminMiddleware = async (req, res, next) => {
 
     console.log("Admin Middleware: Token received:", token);
 
-    //   if (req.url === "/reset-password") {
-    //     return next();
-    //   }
-
     if (!token) {
       console.error("No token provided");
       return res
@@ -20,13 +16,13 @@ const adminMiddleware = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await Admin.findById(decoded.id).select("-password");
-      if (!user) {
-        console.error("User not found");
-        return res.status(401).json({ message: "User not found" });
+      const admin = await Admin.findById(decoded.id).select("-password");
+      if (!admin) {
+        console.error("Admin not found");
+        return res.status(401).json({ message: "admin not found" });
       }
-      console.log("Current user is ", user);
-      req.user = user;
+      console.log("Current admin is ", admin);
+      req.admin = admin; // Set the current admin on the request object
       next();
     } catch (error) {
       if (error.name === "JsonWebTokenError") {
@@ -41,8 +37,17 @@ const adminMiddleware = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.error("Authentication error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error during token verification:", error);
+    if (error.name === "JsonWebTokenError") {
+      console.error("Invalid token");
+      return res.status(401).json({ message: "Invalid token" });
+    } else if (error.name === "TokenExpiredError") {
+      console.error("Token has expired");
+      return res.status(401).json({ message: "Token has expired" });
+    } else {
+      console.error("Error verifying token:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 };
 

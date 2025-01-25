@@ -6,11 +6,12 @@ const Admin = require("../../models/Admin");
 const currentAdmin = async (req, res) => {
   try {
     const admin = req.Admin;
+    const token = req.cookies.admin_token;
     console.log("Current admin retrieved:", admin);
     res.status(200).json({
       status: "success",
       message: "Successful",
-      user,
+      admin,
     });
   } catch (error) {
     // Internal server error

@@ -27,10 +27,11 @@ const signin = async (req, res) => {
       expiresIn: "1h",
     });
 
-    // Set token in a cookie
+    // Set token in a cookie with expiry time
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: false, // Set to false for local development
+      expires: new Date(Date.now() + 3600000), // 1 hour expiry
     });
 
     // Respond with token and user data

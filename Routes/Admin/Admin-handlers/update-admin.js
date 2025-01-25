@@ -13,11 +13,11 @@ const update_admin = async (req, res) => {
         .json({ message: "At least one field is required to update" });
     }
 
-    const admin = await Admin.findById(req.user._id);
+    const admin = await Admin.findById(req.admin._id);
 
     // Update fields
     if (name) admin.name = name;
-    if (name) admin.username = username;
+    if (username) admin.username = username;
     if (title) admin.title = title;
     if (email) admin.email = email;
     if (phone) admin.phone = phone;

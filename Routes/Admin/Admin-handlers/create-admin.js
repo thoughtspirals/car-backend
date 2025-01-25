@@ -38,6 +38,14 @@ const create_admin = async (req, res) => {
       const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
+
+      // Set token in a cookie with expiry time
+      res.cookie("admin_token", token, {
+        httpOnly: true,
+        secure: false, // Set to false for local development
+        expires: new Date(Date.now() + 3600000), // 1 hour expiry
+      });
+
       res.json({ token, admin });
     }
   } catch (error) {
@@ -48,4 +56,5 @@ const create_admin = async (req, res) => {
     });
   }
 };
+
 module.exports = create_admin;
