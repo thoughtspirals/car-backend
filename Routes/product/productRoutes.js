@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../../middleware/authMiddleware");
+const adminMIddleware = require("../../middleware/adminMiddleware");
 const productHandlers = require("./productHandlers/productIndex");
 const multer = require("multer");
 
 const upload = multer({
-  dest: "uploads/",
+  dest: "product-images/",
   limits: { fileSize: 1000000 }, // 1MB file size limit
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
@@ -19,23 +19,33 @@ const upload = multer({
 router.get("api/v1/get-products/", productHandlers.getProducts); // Get all products
 router.get("api/v1/product/:id", productHandlers.getProductById); // Get product by ID
 router.get("api/v1/products/:category", productHandlers.getProductByCategory); // Get product by category
-
+router.get(
+  "/api/v1/products:name",
+  (req, res, next) => {
+    if (req.query.name) {
+      next();
+    } else {
+      return res.status(400).json({ message: "Product name is required" });
+    }
+  },
+  productHandlers.getProductByName
+);
 // Protected Routes (require authentication)
 router.post(
   "/api/v1/create-product",
 
   upload.single("image"),
-  authMiddleware,
+  adminMIddleware,
   productHandlers.createProduct
 ); // Create a product
 router.put(
-  "api/v1/updateProduct/:id",
-  authMiddleware,
+  "/api/v1/updateProduct",
+  adminMIddleware,
   productHandlers.updateProduct
 ); // Update a product
 router.delete(
-  "api/v1/deleteProduct/:id",
-  authMiddleware,
+  "/api/v1/deleteProduct/:productId",
+  adminMIddleware,
   productHandlers.deleteProduct
 ); // Delete a product
 

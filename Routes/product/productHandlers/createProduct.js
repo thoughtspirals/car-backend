@@ -1,13 +1,13 @@
 const Product = require("../../../models/product");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "product-images/" });
 
 const createProduct = async (req, res) => {
   console.log("Request Body:", req.body); // Log the incoming request body
-  const { name, description, price, category, stock } = req.body;
+  const { name, description, price, category } = req.body;
   try {
     // Validate input
-    if (!name || !description || !price || !category || !stock) {
+    if (!name || !description || !price || !category) {
       return res.status(400).json({ message: "Please fill all fields" });
     }
 
@@ -17,7 +17,6 @@ const createProduct = async (req, res) => {
       description,
       price,
       category,
-      stock,
       image: req.file.path,
     });
 

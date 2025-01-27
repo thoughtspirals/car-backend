@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    // _id: {
-    //   type: Number,
-    //   required: true,
-    //   unique: true,
-    // },
     name: {
       type: String,
       required: [true, "Product name is required"],
@@ -25,19 +20,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    stock: {
-      type: Number,
-      required: [true, "Stock quantity is required"],
-      min: [0, "Stock cannot be negative"],
-    },
+
     image: {
       type: String,
       trim: true,
-    },
-    productId: {
-      type: Number,
-      required: true,
-      unique: true,
     },
   },
   { timestamps: true }

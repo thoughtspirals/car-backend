@@ -2,14 +2,13 @@ const Product = require("../../../models/product");
 
 const deleteProduct = async (req, res) => {
   try {
-    const productId = req.params.id;
+    const productId = req.params.productId;
 
-    //Validate Input
     if (!productId) {
       return res.status(400).json({ message: "Product ID is required" });
     }
 
-    //Find and delete product
+    // Find the product by ID and delete
     const product = await Product.findByIdAndDelete(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
